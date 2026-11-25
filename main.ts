@@ -1,3 +1,17 @@
+/**
+ * One Line of Earned Pride — make.fun entry program (harness program/v1).
+ *
+ * Writes a single-line entry to `entry.txt` inside the output directory
+ * (`MAKEFUN_OUTPUT_DIR`, defaulting to `/output`), creating it if needed.
+ *
+ * Gate the output must pass:
+ *   - UTF-8 encoded text
+ *   - 1 to 240 characters (counted as Unicode code points)
+ *   - not only whitespace
+ *   - a single line: no newline characters, including no trailing newline
+ *
+ * The entry is validated before anything is written; any violation throws.
+ */
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -22,6 +36,9 @@ function validate(text: string): void {
   }
   if (text.trim().length === 0) {
     throw new Error("Entry must not be only whitespace.");
+  }
+  if (/[\r\n]/.test(text)) {
+    throw new Error("Entry must be a single line with no newline characters.");
   }
 }
 
